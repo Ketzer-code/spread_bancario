@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.553">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Lucas Ketzer">
+
+<title>Notas sobre spread bancario</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="caderno_spread_files/libs/clipboard/clipboard.min.js"></script>
+<script src="caderno_spread_files/libs/quarto-html/quarto.js"></script>
+<script src="caderno_spread_files/libs/quarto-html/popper.min.js"></script>
+<script src="caderno_spread_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="caderno_spread_files/libs/quarto-html/anchor.min.js"></script>
+<link href="caderno_spread_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="caderno_spread_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="caderno_spread_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="caderno_spread_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="caderno_spread_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="caderno_spread_files/libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="caderno_spread_files/libs/htmlwidgets-1.6.1/htmlwidgets.js"></script>
+<script src="caderno_spread_files/libs/plotly-binding-4.10.4/plotly.js"></script>
+<script src="caderno_spread_files/libs/typedarray-0.1/typedarray.min.js"></script>
+<script src="caderno_spread_files/libs/jquery-3.5.1/jquery.min.js"></script>
+<link href="caderno_spread_files/libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="caderno_spread_files/libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+<link href="caderno_spread_files/libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="caderno_spread_files/libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+<script src="caderno_spread_files/libs/bslib-component-js-0.9.0/components.min.js"></script>
+<script src="caderno_spread_files/libs/bslib-component-js-0.9.0/web-components.min.js" type="module"></script>
+<link href="caderno_spread_files/libs/bslib-component-css-0.9.0/components.css" rel="stylesheet">
+<script src="caderno_spread_files/libs/bslib-tag-require-0.9.0/tag-require.js"></script>
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Notas sobre spread bancario</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Lucas Ketzer </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="conceitos-de-spread-bancario" class="level1">
+<h1>CONCEITOS DE SPREAD BANCARIO</h1>
+<p>SPREAD EX-POST: Diferença entre as receites apuradas de operações de crédito e dos custos de captação dos recursos empregados, mensurado após declaração do resultado contábil. Reflete o resultado efetivo da atividade de intermediação financeira.</p>
+<p>SPREAD EX-ANTE: Diferença entre a taxa de juros cobrada em empréstimos e a taxa de captação da instituição credora, mensurado no momento da decisão da concessão do crédito: reflete decisões de precificação da instituição</p>
+<p>Em ambos os casos, normalmente o spread é decomposto em: - Impostos diretos, indiretos e FGC: Inclui impostos como IR e CSLL, PIS, COFINS, IOF e custos com o FGC - Despesas administrativas: Custos gerais da administração do banco (gastos com funcionários, infraestrutura, etc) - Despesas de inadimplência/empréstimos: Inclui despesas com PDD (provisões de devedores duvidosos), recuperação de crédito, etc - Custos de compulsórios: Recolhimento de depósitos compulsórios das instituições junto ao BACEN - Margem líquida do banco: Tratado como resíduo do spread, representa a parcela do spread após todos os impostos e despesas.</p>
+<p>Além do spread bancário, o BCB disponibiliza o ICC (Indicador de Custo de Crédito), que mensura o custo médio mensal para as famílias e empresas que tenham tomado crédito.</p>
+</section>
+<section id="discussões-sobre-spread-bancário-na-literatura" class="level1">
+<h1>DISCUSSÕES SOBRE SPREAD BANCÁRIO NA LITERATURA</h1>
+<p>A abordagem no tratamento do spread é predominantemente econométrica, com diversos artigos e modelos propostos para estimar quais variáveis possuem mais impacto sobre o spread. De maneira geral, as variáveis aplicadas são divididas da seguinte forma:</p>
+<ul>
+<li>Variáveis macroeconômicas: inflação, PIB, PIB/capita, taxa básica de juros da economia, etc;</li>
+<li>Variáveis microeconômicas: concentração do mercado, rentabilidade das instituições, encaixes, custos operacionais, direcionamento de recursos de crédito, etc;</li>
+<li>Variáveis institucionais: tempo que demora para um crédito ser recuperado por vias judiciais, tempo para resolver insolvências, PDD, etc</li>
+</ul>
+<p>Uma tentativa, baseada na classificação dessas variáveis, de classificar as possíveis abordagens sobre o problema do spread é feita abaixo:</p>
+<section id="fatores-microeconômicos" class="level2">
+<h2 class="anchored" data-anchor-id="fatores-microeconômicos">FATORES MICROECONÔMICOS</h2>
+<section id="comportamento-das-firmas-intermediadoras-financeiras" class="level3">
+<h3 class="anchored" data-anchor-id="comportamento-das-firmas-intermediadoras-financeiras">COMPORTAMENTO DAS FIRMAS INTERMEDIADORAS FINANCEIRAS</h3>
+<p>Seriam os fundamentos teóricos da atividade de intermediação financeira, isso é, de que forma instituições especializadas na atividade de compra e vendas de títulos financeiros (no sentido de, papéis que representam o direito a uma obrigação financeira qualquer) se comportam no que diz respeito à sua atividade: os riscos que enfrentam (ex, risco moral, seleção adversa) oriundos de falhas de mercado, como lidam com esses riscos e como elas competem entre si.</p>
+<p>Também é válido citar casos em que as firmas podem exercer essa função de forma parcial, como por exemplo nos casos de correspondentes bancários - firmas que não atuam necessariamente com a compra de outros títulos financeiros, mas, que através de uma instituição intermediadora concedem créditos para o público.</p>
+<p>Entrando especificamente no mérito da concorrência, seria interessante avaliar se a concorrência traz menos ou mais estabilidade para o sistema financeiro como um todo e se a concorrência monopolística (concorrência por diferenciação de produtos) não seria condição suficiente para que os juros fossem suficientemente baixos.</p>
+<p>A ausência da competição por parte de instituições internacionais também é um fator que chama atenção na questão da concorrência.</p>
+<p>Por fim, vale destacar também como agentes intermediadores públicos interagem com agentes intermediadores privados, dado que em segmentos de crédito direcionado (habitação e agronegócio nomedamente) agentes públicos possuem uma atuação bastante significativa no Brasil.</p>
+</section>
+<section id="comportamento-de-firmas-intermediadoras-de-informação" class="level3">
+<h3 class="anchored" data-anchor-id="comportamento-de-firmas-intermediadoras-de-informação">COMPORTAMENTO DE FIRMAS INTERMEDIADORAS DE INFORMAÇÃO</h3>
+<p>Apesar de não estarem diretamente relacionadas com o spread bancário, as firmas que se especializam na obtenção e venda de informações utilizadas nas decisões tomadas pelas firmas intermediadoras financeiras poderiam exercer um impacto significativo do spread, dado que a qualidade com que os riscos são avaliados pelas últimas dependem intrinsicamente da qualidade do serviço oferecido pelas primeiras.</p>
+</section>
+<section id="comportamento-das-famílias-e-empresas-tomadoras" class="level3">
+<h3 class="anchored" data-anchor-id="comportamento-das-famílias-e-empresas-tomadoras">COMPORTAMENTO DAS FAMÍLIAS E EMPRESAS TOMADORAS</h3>
+<p>A inadimplência é frequentemente citada como um dos pontos principais pelos spreads altos no Brasil, é importante definir o que exatamente provoca a incapacidade de pagamento por parte de famílias e empresas - apesar de ser tentador atribuir esse problema única e exclusivamente à renda, é possível que outros fatores eventualmente possam vir a impactar na decisão de pagar ou não um empréstimo.</p>
+<p>A dificuldade de recuperar dívidas no mercado (citado mais abaixo) poderia gerar alguns incentivos para que os agentes não pagassem suas dívidas propositadamente, dado que não haveriam consequências concretas na inadimplência.</p>
+<p>Poderia ser interessante investigar como a percepção do tomador de crédito quanto as regras de concessão afeta o seu comportamento de pagamento - isso é, se a inadimplência não poderia ser parcialmente provocada por uma falta de compreensão das consequências do não pagamento de uma dívida.</p>
+</section>
+<section id="interferências-no-mercado-crédito-subsidiado-e-parcelamento-sem-juros" class="level3">
+<h3 class="anchored" data-anchor-id="interferências-no-mercado-crédito-subsidiado-e-parcelamento-sem-juros">“INTERFERÊNCIAS” NO MERCADO: CRÉDITO SUBSIDIADO E PARCELAMENTO SEM JUROS</h3>
+<p>Alguns autores argumentam que o crédito subsidiado gera subsídios cruzados, na medida em que bancos privados não podem deixar de oferecer créditos direcionados sob pena de perder uma parcela desse mercado, de forma que isso encareceria outras modalidades de crédito que teriam os juros compensados pelos juros mais baixos destes créditos direcionados.</p>
+<p>Também é bastante citada na discussão sobre juros de cartão de crédito a existência do parcelamento sem juros, onde há o parcelamento de compras a longo-médio prazo sem o pagamento de juros - o argumento seria que o fato dessas compras a prazo não incorrerem em juros geraria distorções que fariam com que modalidades como o parcelamento da fatura e o rotativo sejam mais caros do que poderiam ser caso o parcelamento sem juros nãp existisse.</p>
+<p>A cobrança de tarifas não relacionadas ao crédito (tarifas de serviçõs bancários) poderia ser um caminho para que receitas de outras fontes eventualmente permitissem a redução de receitas advindas de taxas de juros.</p>
+</section>
+</section>
+<section id="fatores-macroeconômicos" class="level2">
+<h2 class="anchored" data-anchor-id="fatores-macroeconômicos">FATORES MACROECONÔMICOS</h2>
+<section id="efeitos-de-poupança-e-investimento" class="level3">
+<h3 class="anchored" data-anchor-id="efeitos-de-poupança-e-investimento">EFEITOS DE POUPANÇA E INVESTIMENTO</h3>
+<p>Há alguns autores que argumentem que a poupança deficitária e a ausência de investimento por parte de agentes privados provoque um crowding-out no mercado de crédito brasileiro, fazendo com que o governo acabe tomando boa parte do mercado que eventualmente seria destinado para tomadores privados de crédito.</p>
+</section>
+<section id="volatilidade-da-inflação" class="level3">
+<h3 class="anchored" data-anchor-id="volatilidade-da-inflação">VOLATILIDADE DA INFLAÇÃO</h3>
+<p>É um pouco mais óbvio como uma inflação instável (e, consequentemente, uma política monetária instável) poderia afetar o spread bancário, dado que a imprevisibilidade da pressão inflacionária distorceria as expectativas dos agentes e a própria alta da taxa básica de juros da economia provocaria um aumento da taxa de juros por parte das instituições credoras.</p>
+</section>
+<section id="efeitos-de-transmissão-de-política-monetária" class="level3">
+<h3 class="anchored" data-anchor-id="efeitos-de-transmissão-de-política-monetária">EFEITOS DE TRANSMISSÃO DE POLÍTICA MONETÁRIA</h3>
+<p>Existem alguns autores que colocam que bancos privados normalmente atuam de forma cíclica, de modo que os efeitos de política monetária seriam diretamente transmitidos no mercado de crédito, afetando algumas características como volume de novas concessões, taxas de juros, etc.</p>
+</section>
+</section>
+<section id="fatores-institucionaishistóricos" class="level2">
+<h2 class="anchored" data-anchor-id="fatores-institucionaishistóricos">FATORES INSTITUCIONAIS/HISTÓRICOS</h2>
+<section id="custos-regulatórios-tributários-e-administrativos" class="level3">
+<h3 class="anchored" data-anchor-id="custos-regulatórios-tributários-e-administrativos">CUSTOS REGULATÓRIOS, TRIBUTÁRIOS E ADMINISTRATIVOS</h3>
+<p>Os tributos diretos, como a CSLL e IRPJ podem afetar o custo da concessão de crédito como um todo - há ainda também as limitações de desconto de PDD dos resultados tributáveis, de forma que as instituições que concedem crédito “pagariam” a perda duas vezes - no provisionamento e na tributação. Os tributos indiretos, como IOF, PIS e COFINS também incidem sobre as operações de crédito e podem impactar as taxas de juros.</p>
+<p>Quanto aos custos regulatórios, além dos custos de reportar as informações aos órgãos reguladores e de se adequar a legislção vigente, vale destacar também (nos casos em que existem agências físicas) os custos de adequar cada agência a legislações locais, o que aumenta significativamente o custo de operação das agências. Vale também destacar os depósitos compulsórios e direcionados, que obrigam os bancos a direcionar parte dos recursos captados ou a modalidades específicas ou como encaixes ao Banco Central, o que reduz os recursos disponíveis para serem emprestados - valeria a investigação do quanto seria possível flexibilizar esses encaixes sem que a estabilidade do sistema financeiro fosse prejudicada.</p>
+<p>Os custos administrativos tem mais relação com os custos com tecnologia, salários e processos judiciais - é notável, especificamente no Brasil, os altos custos com processos trabalhistas e com processos judiciais de recuperação de crédito.</p>
+<p>É interessante também citar como o próprio mecanismo de provisão de devedores duvidosos pode afetar os incentivos do agente intermediador quando este conceder o crédito - por exemplo, a resolução 2682 do BACEN determina que as provisões devem ser feitas a medida que os créditos forem vencidos, enquanto a IFRS9 provisiona as perdas com base em perda esperada, o que pode alterar de forma bastante significativa o apetite de risco das instituições.</p>
+<p>Por fim, é válido notar que o Brasil é aderente aos Acordos de Basileia, que estabelecem diversas exigências que regulam o funcionamento das instituições financeiras.</p>
+</section>
+<section id="ambiente-jurídico-e-regulatório" class="level3">
+<h3 class="anchored" data-anchor-id="ambiente-jurídico-e-regulatório">AMBIENTE JURÍDICO E REGULATÓRIO</h3>
+<p>Um fator muito citado no impacto do spread bancário é a insegurança jurídica envolvendo a concessão de operações de crédito em diversos aspectos: a falta de dispostivos adequados de cobrança e recuperação de crédito, a lentidão dos processos de recuperação (muito pela ausência de formas extrajudiciais de cobrança) e a falta de dispostivos adequados para regulação de operações eletrônicas. No que tange a crédito para empresas, também é muito citada a Lei de Falências, que seria inadequada em diversos sentidos para a recuperação dos créditos.</p>
+<p>Quanto ao ambiente regulatório, algumas iniciativas como por exemplo o cadastro positivo, o open finance e a regulação de garantias para alguns produtos são frequentemente citadas como exemplos de medidas positivas que poderiam reduzir o custo do crédito. Seria também interessante considerar como outras regulações que dizem respeito às exigências de controle de riscos dessas instituições afetam os seus apetites e alocação de portfólio - o leque de garantidas que poderiam ser oferecidas em uma operação de crédito talvez poderia ser ampliado.</p>
+<p>Existem algumas medidas aplicadas em outros contextos em que se buscou limitar artificialmente o teto das taxas de juros de alguns produtos, o que pode se provar eficaz em casos muito específicos em que os juros praticados se tornam exorbitantemente altos, ultrapassando preços que seriam adequados para certos produtos.</p>
+</section>
+<section id="formação-histórica-do-mercado" class="level3">
+<h3 class="anchored" data-anchor-id="formação-histórica-do-mercado">FORMAÇÃO HISTÓRICA DO MERCADO</h3>
+<p>Para citar o exemplo do mercado de bureaux de crédito, muitas dessas instituições tem um contexto histórico de serem formadas por associações de comerciantes que apontavam quais consumidores não pagavam suas obrigações junto as lojas, assim evitando fazer negócio com “caloteiros” - há também o caso da Serasa que foi fundada conjuntamente pelos maiores bancos brasileiros e posteriormente comprada por um grupo irlandês. Aspectos históricos na formação do mercado de crédito brasileiro, ou até de instituições particulares, podem ter algum impacto no motivo das taxas de juros cobradas serem tão altas.</p>
+<p>Alguns exemplos notáveis: a readequação dessas instituições a um cenário onde a receita inflacionária deixou de existir e a série de fusões e aquisições que ocorreram tanto após o período inflacionário quanto as que ocorreram após 2008.</p>
+</section>
+</section>
+<section id="conclusão" class="level2">
+<h2 class="anchored" data-anchor-id="conclusão">CONCLUSÃO</h2>
+<p>Não parece haver muita convergência no diagnóstico dos altos spreads brasileiros, apesar dos fatores mais citados serem tanto a inadimplência quanto a concentração do mercado bancário, com poucas propostas para resolução do problema, salvo alteração em políticas tributárias, monetárias e a implementação de algumas medidas pontuais (cadastro positivo, open finance, regulação de dispositivos digitais para concessão, etc): boa parte dessas propostas são feitas e executadas pelo BACEN.</p>
+</section>
+</section>
+<section id="breve-histórico-do-spread-bancário-e-mercado-de-crédito-brasileiro" class="level1">
+<h1>BREVE HISTÓRICO DO SPREAD BANCÁRIO E MERCADO DE CRÉDITO BRASILEIRO</h1>
+<p>Essa seção é dedicada a apresentar um breve histórico de estatísticas relevantes para o mercado de crédito brasileiro, bem como estabelecer uma linha do tempo desse mercado.</p>
+<p>Os eventos aqui destacados foram separados em: - REGULAÇÃO OU LEI: Alterações regulatórias e legais em geral; - PLANOS ECONÔMICOS: Planos implementados pelo Governo Executivo; - CHOQUES ECONÔMICOS: Choques internos ou externos na economia; - ALTERAÇÕES DE MERCADO: Entrada ou saída de competidores relevantes do mercado.</p>
+<p>Como a quantidade de fusões e aquisições que ocorreram no mercado brasileiro nesse período é bastante extensa, uma linha do tempo separada irá apresentar as F&amp;As relevantes realizados pelas maiores intituições do mercado nesse período.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init="" data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-3797">
+<div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-12d2e3b52136c32d449f" style="width:100%;height:400px;"></div>
+<script type="application/json" data-for="htmlwidget-12d2e3b52136c32d449f">{"x":{"visdat":{"15dd43de8b6f2":["function () ","plotlyVisDat"]},"cur_data":"15dd43de8b6f2","attrs":{"15dd43de8b6f2":{"mode":"lines","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"},"15dd43de8b6f2.1":{"mode":"lines","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter","x":["2011-07-31 21:00:00.000000","2014-11-30 22:00:00.000000"],"y":7,"line":{"color":"#CCEBC5","width":33.3333333333333},"showlegend":false,"hoverinfo":"text","text":"<b>IMPLEMENTAÇÃO DA NOVA MATRIZ ECONÔMICA<\/b><br>from <b>2011-07-31 21:00:00<\/b> to <b>2014-11-30 22:00:00<\/b>","inherit":true},"15dd43de8b6f2.2":{"mode":"text","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter","x":"2013-03-31 21:00:00.000000","y":7,"text":"IMPLEMENTAÇÃO DA NOVA MATRIZ ECONÔMICA","textfont":{"family":"Arial","size":14,"color":"rgba(0,0,0,1)"},"textposition":"center","showlegend":false,"hoverinfo":"none","inherit":true},"15dd43de8b6f2.3":{"mode":"lines","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter","x":["1994-11-30 22:00:00.000000","1995-02-28 21:00:00.000000"],"y":5,"line":{"color":"#FB8072","width":33.3333333333333},"showlegend":false,"hoverinfo":"text","text":"<b>CRISE DO MÉXICO<\/b><br>from <b>1994-11-30 22:00:00<\/b> to <b>1995-02-28 21:00:00<\/b>","inherit":true},"15dd43de8b6f2.4":{"mode":"text","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter","x":"1995-01-14 22:00:00.000000","y":5,"text":"CRISE DO MÉXICO","textfont":{"family":"Arial","size":14,"color":"rgba(0,0,0,1)"},"textposition":"center","showlegend":false,"hoverinfo":"none","inherit":true},"15dd43de8b6f2.5":{"mode":"lines","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter","x":["1999-12-31 22:00:00.000000","2014-11-30 22:00:00.000000"],"y":5,"line":{"color":"#FFFFB3","width":33.3333333333333},"showlegend":false,"hoverinfo":"text","text":"<b>BOOM DAS COMMODITIES<\/b><br>from <b>1999-12-31 22:00:00<\/b> to <b>2014-11-30 22:00:00<\/b>","inherit":true},"15dd43de8b6f2.6":{"mode":"text","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter","x":"2007-06-16 21:00:00.000000","y":5,"text":"BOOM DAS COMMODITIES","textfont":{"family":"Arial","size":14,"color":"rgba(0,0,0,1)"},"textposition":"center","showlegend":false,"hoverinfo":"none","inherit":true},"15dd43de8b6f2.7":{"mode":"lines","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter","x":["2008-06-30 21:00:00.000000","2010-11-30 22:00:00.000000"],"y":4,"line":{"color":"#B3DE69","width":33.3333333333333},"showlegend":false,"hoverinfo":"text","text":"<b>CRISE DO SUBPRIME<\/b><br>from <b>2008-06-30 21:00:00<\/b> to <b>2010-11-30 22:00:00<\/b>","inherit":true},"15dd43de8b6f2.8":{"mode":"text","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter","x":"2009-09-15 09:00:00.000000","y":4,"text":"CRISE DO SUBPRIME","textfont":{"family":"Arial","size":14,"color":"rgba(0,0,0,1)"},"textposition":"center","showlegend":false,"hoverinfo":"none","inherit":true},"15dd43de8b6f2.9":{"mode":"lines","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter","x":["2014-06-30 21:00:00.000000","2017-11-30 22:00:00.000000"],"y":4,"line":{"color":"#8DD3C7","width":33.3333333333333},"showlegend":false,"hoverinfo":"text","text":"<b>CRISE DE 2014-2017<\/b><br>from <b>2014-06-30 21:00:00<\/b> to <b>2017-11-30 22:00:00<\/b>","inherit":true},"15dd43de8b6f2.10":{"mode":"text","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter","x":"2016-03-16 09:00:00.000000","y":4,"text":"CRISE DE 2014-2017","textfont":{"family":"Arial","size":14,"color":"rgba(0,0,0,1)"},"textposition":"center","showlegend":false,"hoverinfo":"none","inherit":true},"15dd43de8b6f2.11":{"mode":"lines","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter","x":["2020-02-29 21:00:00.000000","2022-11-30 21:00:00.000000"],"y":5,"line":{"color":"#FCCDE5","width":33.3333333333333},"showlegend":false,"hoverinfo":"text","text":"<b>PANDEMIA DA COVID-19<\/b><br>from <b>2020-02-29 21:00:00<\/b> to <b>2022-11-30 21:00:00<\/b>","inherit":true},"15dd43de8b6f2.12":{"mode":"text","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter","x":"2021-07-16 09:00:00.000000","y":5,"text":"PANDEMIA DA COVID-19","textfont":{"family":"Arial","size":14,"color":"rgba(0,0,0,1)"},"textposition":"center","showlegend":false,"hoverinfo":"none","inherit":true},"15dd43de8b6f2.13":{"mode":"lines","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter","x":["1995-10-31 22:00:00.000000","2004-11-30 22:00:00.000000"],"y":2,"line":{"color":"#80B1D3","width":33.3333333333333},"showlegend":false,"hoverinfo":"text","text":"<b>1ª CONSOLIDAÇÃO BANCÁRIA (ITAÚ, UNIBANCO, SANTANDER, ABN AMRO, HSBC, BRADESCO)<\/b><br>from <b>1995-10-31 22:00:00<\/b> to <b>2004-11-30 22:00:00<\/b>","inherit":true},"15dd43de8b6f2.14":{"mode":"text","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter","x":"2000-05-16 21:00:00.000000","y":2,"text":"1ª CONSOLIDAÇÃO BANCÁRIA (ITAÚ, UNIBANCO, SANTANDER, ABN AMRO, HSBC, BRADESCO)","textfont":{"family":"Arial","size":14,"color":"rgba(0,0,0,1)"},"textposition":"center","showlegend":false,"hoverinfo":"none","inherit":true},"15dd43de8b6f2.15":{"mode":"lines","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter","x":["2007-04-30 21:00:00.000000","2016-11-30 22:00:00.000000"],"y":2,"line":{"color":"#FDB462","width":33.3333333333333},"showlegend":false,"hoverinfo":"text","text":"<b>2ª CONSOLIDAÇÃO BANCÁRIA  (ITAÚ, SANTANDER, BRADESCO)<\/b><br>from <b>2007-04-30 21:00:00<\/b> to <b>2016-11-30 22:00:00<\/b>","inherit":true},"15dd43de8b6f2.16":{"mode":"text","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter","x":"2012-02-14 22:00:00.000000","y":2,"text":"2ª CONSOLIDAÇÃO BANCÁRIA  (ITAÚ, SANTANDER, BRADESCO)","textfont":{"family":"Arial","size":14,"color":"rgba(0,0,0,1)"},"textposition":"center","showlegend":false,"hoverinfo":"none","inherit":true},"15dd43de8b6f2.17":{"mode":"lines","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter","x":["2015-11-30 22:00:00.000000","2020-11-30 21:00:00.000000"],"y":1,"line":{"color":"#FFFFB3","width":33.3333333333333},"showlegend":false,"hoverinfo":"text","text":"<b>ENTRADA DE FINTECHS NO MERCADO (NUBANK, INTER)<\/b><br>from <b>2015-11-30 22:00:00<\/b> to <b>2020-11-30 21:00:00<\/b>","inherit":true},"15dd43de8b6f2.18":{"mode":"text","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter","x":"2018-06-01 09:00:00.000000","y":1,"text":"ENTRADA DE FINTECHS NO MERCADO (NUBANK, INTER)","textfont":{"family":"Arial","size":14,"color":"rgba(0,0,0,1)"},"textposition":"center","showlegend":false,"hoverinfo":"none","inherit":true},"15dd43de8b6f2.19":{"mode":"lines","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter","x":["2020-11-30 21:00:00.000000","2025-02-28 21:00:00.000000"],"y":2,"line":{"color":"#CCEBC5","width":33.3333333333333},"showlegend":false,"hoverinfo":"text","text":"<b>CONSOLIDAÇÃO DAS FINTECHS NO MERCADO<\/b><br>from <b>2020-11-30 21:00:00<\/b> to <b>2025-02-28 21:00:00<\/b>","inherit":true},"15dd43de8b6f2.20":{"mode":"text","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter","x":"2023-01-15 09:00:00.000000","y":2,"text":"CONSOLIDAÇÃO DAS FINTECHS NO MERCADO","textfont":{"family":"Arial","size":14,"color":"rgba(0,0,0,1)"},"textposition":"center","showlegend":false,"hoverinfo":"none","inherit":true},"15dd43de8b6f2.21":{"mode":"markers","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter","x":["1988-06-30 21:00:00.000000","1990-10-31 22:00:00.000000","1996-04-30 21:00:00.000000","1996-12-31 22:00:00.000000","1999-11-30 22:00:00.000000","2002-03-31 21:00:00.000000","2003-09-30 21:00:00.000000","2004-05-31 21:00:00.000000","2008-08-31 21:00:00.000000","2010-11-30 22:00:00.000000","2011-05-31 21:00:00.000000","2016-03-31 21:00:00.000000","2017-09-30 21:00:00.000000","2018-03-31 21:00:00.000000","2019-04-30 21:00:00.000000","2021-06-30 21:00:00.000000","2023-09-30 21:00:00.000000","2024-11-30 21:00:00.000000","1994-06-30 21:00:00.000000","1995-10-31 22:00:00.000000","1996-07-31 21:00:00.000000","1998-12-31 22:00:00.000000","2016-11-30 22:00:00.000000","1997-06-30 21:00:00.000000","2020-04-30 21:00:00.000000","2020-10-31 21:00:00.000000"],"y":[9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,7,7,7,7,7,5,2,2],"marker":{"color":["#8DD3C7","#FFFFB3","#B3DE69","#D9D9D9","#8DD3C7","#BEBADA","#FB8072","#80B1D3","#FCCDE5","#D9D9D9","#BC80BD","#BEBADA","#80B1D3","#FDB462","#B3DE69","#8DD3C7","#FFFFB3","#BEBADA","#BEBADA","#FDB462","#FCCDE5","#CCEBC5","#FB8072","#BC80BD","#D9D9D9","#BC80BD"],"size":23.3333333333333,"symbol":"circle","line":{"color":"black","width":1}},"showlegend":false,"hoverinfo":"text","text":["<b>BASILEIA I: 1988-06-30 21:00:00<\/b>","<b>LEI 8078/90 (REGULAMENTAÇÃO CADASTRO NEGATIVO): 1990-10-31 22:00:00<\/b>","<b>RESOLUÇÃO CMN 2099 (REGULAÇÃO SFN): 1996-04-30 21:00:00<\/b>","<b>LEI 9447/97 (PODER DE INTERVENÇÃO BACEN): 1996-12-31 22:00:00<\/b>","<b>RESOLUÇÃO 2682 CMN (PDD): 1999-11-30 22:00:00<\/b>","<b>IMPLEMENTAÇÃO SPB: 2002-03-31 21:00:00<\/b>","<b>LEI 10820/03 (CRÉDITO CONSIGNADO): 2003-09-30 21:00:00<\/b>","<b>BASILEIA II: 2004-05-31 21:00:00<\/b>","<b>LEI 11795/08 (LEI DOS CONSÓRCIOS): 2008-08-31 21:00:00<\/b>","<b>ACORDO DE BASILEIA III: 2010-11-30 22:00:00<\/b>","<b>LEI 12414/2011 (CADASTRO POSITIVO): 2011-05-31 21:00:00<\/b>","<b>RESOLUÇÃO 4480 CMN (ABERTURA DE CONTA DIGITAL): 2016-03-31 21:00:00<\/b>","<b>RESOLUÇÃO 4.553 CMN (SEGMENTAÇÃO IFS): 2017-09-30 21:00:00<\/b>","<b>RESOLUÇÕES 4656-58 CMN (REGULAÇÃO SEP E SED): 2018-03-31 21:00:00<\/b>","<b>ALTERAÇÃO LEI 12414/2011 (INCLUSÃO AUTOMATICA CADASTRO POSITIVO): 2019-04-30 21:00:00<\/b>","<b>LEI 14181/2021 (LEI DO SUPERENDIVIDAMENTO): 2021-06-30 21:00:00<\/b>","<b>LEI 14690 (DESENROLA + TETO ROTATIVO): 2023-09-30 21:00:00<\/b>","<b>RESOLUÇÃO 4966 CMN (TRANSIÇÃO IFRS9): 2024-11-30 21:00:00<\/b>","<b>IMPLEMENTAÇÃO DO REAL: 1994-06-30 21:00:00<\/b>","<b>PROER: 1995-10-31 22:00:00<\/b>","<b>PROES: 1996-07-31 21:00:00<\/b>","<b>TRIPÉ MACROECONÔMICO: 1998-12-31 22:00:00<\/b>","<b>TETO DE GASTOS: 2016-11-30 22:00:00<\/b>","<b>CRISE ASIÁTICA: 1997-06-30 21:00:00<\/b>","<b>LANÇAMENTO DO OPEN BANKING: 2020-04-30 21:00:00<\/b>","<b>LANÇAMENTO DO PIX: 2020-10-31 21:00:00<\/b>"],"inherit":true},"15dd43de8b6f2.22":{"mode":"text","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter","x":["1988-06-30 21:00:00.000000","1990-10-31 22:00:00.000000","1996-04-30 21:00:00.000000","1996-12-31 22:00:00.000000","1999-11-30 22:00:00.000000","2002-03-31 21:00:00.000000","2003-09-30 21:00:00.000000","2004-05-31 21:00:00.000000","2008-08-31 21:00:00.000000","2010-11-30 22:00:00.000000","2011-05-31 21:00:00.000000","2016-03-31 21:00:00.000000","2017-09-30 21:00:00.000000","2018-03-31 21:00:00.000000","2019-04-30 21:00:00.000000","2021-06-30 21:00:00.000000","2023-09-30 21:00:00.000000","2024-11-30 21:00:00.000000","1994-06-30 21:00:00.000000","1995-10-31 22:00:00.000000","1996-07-31 21:00:00.000000","1998-12-31 22:00:00.000000","2016-11-30 22:00:00.000000","1997-06-30 21:00:00.000000","2020-04-30 21:00:00.000000","2020-10-31 21:00:00.000000"],"y":[9.5,8.5,9.5,8.5,9.5,8.5,9.5,8.5,9.5,8.5,9.5,8.5,9.5,8.5,9.5,8.5,9.5,8.5,7.5,6.5,7.5,6.5,7.5,4.5,2.5,1.5],"text":["BASILEIA I","LEI 8078/90 (REGULAMENTAÇÃO CADASTRO NEGATIVO)","RESOLUÇÃO CMN 2099 (REGULAÇÃO SFN)","LEI 9447/97 (PODER DE INTERVENÇÃO BACEN)","RESOLUÇÃO 2682 CMN (PDD)","IMPLEMENTAÇÃO SPB","LEI 10820/03 (CRÉDITO CONSIGNADO)","BASILEIA II","LEI 11795/08 (LEI DOS CONSÓRCIOS)","ACORDO DE BASILEIA III","LEI 12414/2011 (CADASTRO POSITIVO)","RESOLUÇÃO 4480 CMN (ABERTURA DE CONTA DIGITAL)","RESOLUÇÃO 4.553 CMN (SEGMENTAÇÃO IFS)","RESOLUÇÕES 4656-58 CMN (REGULAÇÃO SEP E SED)","ALTERAÇÃO LEI 12414/2011 (INCLUSÃO AUTOMATICA CADASTRO POSITIVO)","LEI 14181/2021 (LEI DO SUPERENDIVIDAMENTO)","LEI 14690 (DESENROLA + TETO ROTATIVO)","RESOLUÇÃO 4966 CMN (TRANSIÇÃO IFRS9)","IMPLEMENTAÇÃO DO REAL","PROER","PROES","TRIPÉ MACROECONÔMICO","TETO DE GASTOS","CRISE ASIÁTICA","LANÇAMENTO DO OPEN BANKING","LANÇAMENTO DO PIX"],"textfont":{"family":"Arial","size":14,"color":["rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)"]},"textposition":"center","showlegend":false,"hoverinfo":"none","inherit":true}},"layout":{"margin":{"b":10,"l":10,"t":10,"r":10,"pad":10},"hovermode":"closest","plot_bgcolor":"#FCFCFC","shapes":[{"type":"line","x0":0,"x1":1,"xref":"paper","y0":3,"y1":3,"line":{"color":"grey65","width":0.5}},{"type":"line","x0":0,"x1":1,"xref":"paper","y0":6,"y1":6,"line":{"color":"grey65","width":0.5}},{"type":"line","x0":0,"x1":1,"xref":"paper","y0":8,"y1":8,"line":{"color":"grey65","width":0.5}}],"xaxis":{"domain":[0,1],"automargin":true,"linewidth":1,"mirror":true,"showgrid":true,"gridcolor":"grey90","title":"","dtick":"M12","tickformat":"%Y"},"yaxis":{"domain":[0,1],"automargin":true,"linewidth":1,"mirror":true,"range":[0,10],"showgrid":false,"title":"","tickmode":"array","tickvals":[9,7,4.66666666666667,1.83333333333333],"ticktext":["REGULAÇÃO OU LEI","PLANOS ECONÔMICOS","CHOQUES ECONÔMICOS","ALTERAÇÕES DE MERCADO"],"tickfont":{"size":9}},"showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"mode":"lines","type":"scatter","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null},{"mode":"lines","type":"scatter","x":["2011-07-31 21:00:00.000000","2014-11-30 22:00:00.000000"],"y":[7,7],"line":{"color":"#CCEBC5","width":33.3333333333333},"showlegend":false,"hoverinfo":["text","text"],"text":["<b>IMPLEMENTAÇÃO DA NOVA MATRIZ ECONÔMICA<\/b><br>from <b>2011-07-31 21:00:00<\/b> to <b>2014-11-30 22:00:00<\/b>","<b>IMPLEMENTAÇÃO DA NOVA MATRIZ ECONÔMICA<\/b><br>from <b>2011-07-31 21:00:00<\/b> to <b>2014-11-30 22:00:00<\/b>"],"marker":{"color":"rgba(255,127,14,1)","line":{"color":"rgba(255,127,14,1)"}},"error_y":{"color":"rgba(255,127,14,1)"},"error_x":{"color":"rgba(255,127,14,1)"},"xaxis":"x","yaxis":"y","frame":null},{"mode":"text","type":"scatter","x":["2013-03-31 21:00:00.000000"],"y":[7],"text":"IMPLEMENTAÇÃO DA NOVA MATRIZ ECONÔMICA","textfont":{"family":"Arial","size":7,"color":"rgba(0,0,0,1)"},"textposition":"center","showlegend":false,"hoverinfo":"none","marker":{"color":"rgba(44,160,44,1)","line":{"color":"rgba(44,160,44,1)"}},"error_y":{"color":"rgba(44,160,44,1)"},"error_x":{"color":"rgba(44,160,44,1)"},"line":{"color":"rgba(44,160,44,1)"},"xaxis":"x","yaxis":"y","frame":null},{"mode":"lines","type":"scatter","x":["1994-11-30 22:00:00.000000","1995-02-28 21:00:00.000000"],"y":[5,5],"line":{"color":"#FB8072","width":33.3333333333333},"showlegend":false,"hoverinfo":["text","text"],"text":["<b>CRISE DO MÉXICO<\/b><br>from <b>1994-11-30 22:00:00<\/b> to <b>1995-02-28 21:00:00<\/b>","<b>CRISE DO MÉXICO<\/b><br>from <b>1994-11-30 22:00:00<\/b> to <b>1995-02-28 21:00:00<\/b>"],"marker":{"color":"rgba(214,39,40,1)","line":{"color":"rgba(214,39,40,1)"}},"error_y":{"color":"rgba(214,39,40,1)"},"error_x":{"color":"rgba(214,39,40,1)"},"xaxis":"x","yaxis":"y","frame":null},{"mode":"text","type":"scatter","x":["1995-01-14 22:00:00.000000"],"y":[5],"text":"CRISE DO MÉXICO","textfont":{"family":"Arial","size":7,"color":"rgba(0,0,0,1)"},"textposition":"center","showlegend":false,"hoverinfo":"none","marker":{"color":"rgba(148,103,189,1)","line":{"color":"rgba(148,103,189,1)"}},"error_y":{"color":"rgba(148,103,189,1)"},"error_x":{"color":"rgba(148,103,189,1)"},"line":{"color":"rgba(148,103,189,1)"},"xaxis":"x","yaxis":"y","frame":null},{"mode":"lines","type":"scatter","x":["1999-12-31 22:00:00.000000","2014-11-30 22:00:00.000000"],"y":[5,5],"line":{"color":"#FFFFB3","width":33.3333333333333},"showlegend":false,"hoverinfo":["text","text"],"text":["<b>BOOM DAS COMMODITIES<\/b><br>from <b>1999-12-31 22:00:00<\/b> to <b>2014-11-30 22:00:00<\/b>","<b>BOOM DAS COMMODITIES<\/b><br>from <b>1999-12-31 22:00:00<\/b> to <b>2014-11-30 22:00:00<\/b>"],"marker":{"color":"rgba(140,86,75,1)","line":{"color":"rgba(140,86,75,1)"}},"error_y":{"color":"rgba(140,86,75,1)"},"error_x":{"color":"rgba(140,86,75,1)"},"xaxis":"x","yaxis":"y","frame":null},{"mode":"text","type":"scatter","x":["2007-06-16 21:00:00.000000"],"y":[5],"text":"BOOM DAS COMMODITIES","textfont":{"family":"Arial","size":7,"color":"rgba(0,0,0,1)"},"textposition":"center","showlegend":false,"hoverinfo":"none","marker":{"color":"rgba(227,119,194,1)","line":{"color":"rgba(227,119,194,1)"}},"error_y":{"color":"rgba(227,119,194,1)"},"error_x":{"color":"rgba(227,119,194,1)"},"line":{"color":"rgba(227,119,194,1)"},"xaxis":"x","yaxis":"y","frame":null},{"mode":"lines","type":"scatter","x":["2008-06-30 21:00:00.000000","2010-11-30 22:00:00.000000"],"y":[4,4],"line":{"color":"#B3DE69","width":33.3333333333333},"showlegend":false,"hoverinfo":["text","text"],"text":["<b>CRISE DO SUBPRIME<\/b><br>from <b>2008-06-30 21:00:00<\/b> to <b>2010-11-30 22:00:00<\/b>","<b>CRISE DO SUBPRIME<\/b><br>from <b>2008-06-30 21:00:00<\/b> to <b>2010-11-30 22:00:00<\/b>"],"marker":{"color":"rgba(127,127,127,1)","line":{"color":"rgba(127,127,127,1)"}},"error_y":{"color":"rgba(127,127,127,1)"},"error_x":{"color":"rgba(127,127,127,1)"},"xaxis":"x","yaxis":"y","frame":null},{"mode":"text","type":"scatter","x":["2009-09-15 09:00:00.000000"],"y":[4],"text":"CRISE DO SUBPRIME","textfont":{"family":"Arial","size":7,"color":"rgba(0,0,0,1)"},"textposition":"center","showlegend":false,"hoverinfo":"none","marker":{"color":"rgba(188,189,34,1)","line":{"color":"rgba(188,189,34,1)"}},"error_y":{"color":"rgba(188,189,34,1)"},"error_x":{"color":"rgba(188,189,34,1)"},"line":{"color":"rgba(188,189,34,1)"},"xaxis":"x","yaxis":"y","frame":null},{"mode":"lines","type":"scatter","x":["2014-06-30 21:00:00.000000","2017-11-30 22:00:00.000000"],"y":[4,4],"line":{"color":"#8DD3C7","width":33.3333333333333},"showlegend":false,"hoverinfo":["text","text"],"text":["<b>CRISE DE 2014-2017<\/b><br>from <b>2014-06-30 21:00:00<\/b> to <b>2017-11-30 22:00:00<\/b>","<b>CRISE DE 2014-2017<\/b><br>from <b>2014-06-30 21:00:00<\/b> to <b>2017-11-30 22:00:00<\/b>"],"marker":{"color":"rgba(23,190,207,1)","line":{"color":"rgba(23,190,207,1)"}},"error_y":{"color":"rgba(23,190,207,1)"},"error_x":{"color":"rgba(23,190,207,1)"},"xaxis":"x","yaxis":"y","frame":null},{"mode":"text","type":"scatter","x":["2016-03-16 09:00:00.000000"],"y":[4],"text":"CRISE DE 2014-2017","textfont":{"family":"Arial","size":7,"color":"rgba(0,0,0,1)"},"textposition":"center","showlegend":false,"hoverinfo":"none","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null},{"mode":"lines","type":"scatter","x":["2020-02-29 21:00:00.000000","2022-11-30 21:00:00.000000"],"y":[5,5],"line":{"color":"#FCCDE5","width":33.3333333333333},"showlegend":false,"hoverinfo":["text","text"],"text":["<b>PANDEMIA DA COVID-19<\/b><br>from <b>2020-02-29 21:00:00<\/b> to <b>2022-11-30 21:00:00<\/b>","<b>PANDEMIA DA COVID-19<\/b><br>from <b>2020-02-29 21:00:00<\/b> to <b>2022-11-30 21:00:00<\/b>"],"marker":{"color":"rgba(255,127,14,1)","line":{"color":"rgba(255,127,14,1)"}},"error_y":{"color":"rgba(255,127,14,1)"},"error_x":{"color":"rgba(255,127,14,1)"},"xaxis":"x","yaxis":"y","frame":null},{"mode":"text","type":"scatter","x":["2021-07-16 09:00:00.000000"],"y":[5],"text":"PANDEMIA DA COVID-19","textfont":{"family":"Arial","size":7,"color":"rgba(0,0,0,1)"},"textposition":"center","showlegend":false,"hoverinfo":"none","marker":{"color":"rgba(44,160,44,1)","line":{"color":"rgba(44,160,44,1)"}},"error_y":{"color":"rgba(44,160,44,1)"},"error_x":{"color":"rgba(44,160,44,1)"},"line":{"color":"rgba(44,160,44,1)"},"xaxis":"x","yaxis":"y","frame":null},{"mode":"lines","type":"scatter","x":["1995-10-31 22:00:00.000000","2004-11-30 22:00:00.000000"],"y":[2,2],"line":{"color":"#80B1D3","width":33.3333333333333},"showlegend":false,"hoverinfo":["text","text"],"text":["<b>1ª CONSOLIDAÇÃO BANCÁRIA (ITAÚ, UNIBANCO, SANTANDER, ABN AMRO, HSBC, BRADESCO)<\/b><br>from <b>1995-10-31 22:00:00<\/b> to <b>2004-11-30 22:00:00<\/b>","<b>1ª CONSOLIDAÇÃO BANCÁRIA (ITAÚ, UNIBANCO, SANTANDER, ABN AMRO, HSBC, BRADESCO)<\/b><br>from <b>1995-10-31 22:00:00<\/b> to <b>2004-11-30 22:00:00<\/b>"],"marker":{"color":"rgba(214,39,40,1)","line":{"color":"rgba(214,39,40,1)"}},"error_y":{"color":"rgba(214,39,40,1)"},"error_x":{"color":"rgba(214,39,40,1)"},"xaxis":"x","yaxis":"y","frame":null},{"mode":"text","type":"scatter","x":["2000-05-16 21:00:00.000000"],"y":[2],"text":"1ª CONSOLIDAÇÃO BANCÁRIA (ITAÚ, UNIBANCO, SANTANDER, ABN AMRO, HSBC, BRADESCO)","textfont":{"family":"Arial","size":7,"color":"rgba(0,0,0,1)"},"textposition":"center","showlegend":false,"hoverinfo":"none","marker":{"color":"rgba(148,103,189,1)","line":{"color":"rgba(148,103,189,1)"}},"error_y":{"color":"rgba(148,103,189,1)"},"error_x":{"color":"rgba(148,103,189,1)"},"line":{"color":"rgba(148,103,189,1)"},"xaxis":"x","yaxis":"y","frame":null},{"mode":"lines","type":"scatter","x":["2007-04-30 21:00:00.000000","2016-11-30 22:00:00.000000"],"y":[2,2],"line":{"color":"#FDB462","width":33.3333333333333},"showlegend":false,"hoverinfo":["text","text"],"text":["<b>2ª CONSOLIDAÇÃO BANCÁRIA  (ITAÚ, SANTANDER, BRADESCO)<\/b><br>from <b>2007-04-30 21:00:00<\/b> to <b>2016-11-30 22:00:00<\/b>","<b>2ª CONSOLIDAÇÃO BANCÁRIA  (ITAÚ, SANTANDER, BRADESCO)<\/b><br>from <b>2007-04-30 21:00:00<\/b> to <b>2016-11-30 22:00:00<\/b>"],"marker":{"color":"rgba(140,86,75,1)","line":{"color":"rgba(140,86,75,1)"}},"error_y":{"color":"rgba(140,86,75,1)"},"error_x":{"color":"rgba(140,86,75,1)"},"xaxis":"x","yaxis":"y","frame":null},{"mode":"text","type":"scatter","x":["2012-02-14 22:00:00.000000"],"y":[2],"text":"2ª CONSOLIDAÇÃO BANCÁRIA  (ITAÚ, SANTANDER, BRADESCO)","textfont":{"family":"Arial","size":7,"color":"rgba(0,0,0,1)"},"textposition":"center","showlegend":false,"hoverinfo":"none","marker":{"color":"rgba(227,119,194,1)","line":{"color":"rgba(227,119,194,1)"}},"error_y":{"color":"rgba(227,119,194,1)"},"error_x":{"color":"rgba(227,119,194,1)"},"line":{"color":"rgba(227,119,194,1)"},"xaxis":"x","yaxis":"y","frame":null},{"mode":"lines","type":"scatter","x":["2015-11-30 22:00:00.000000","2020-11-30 21:00:00.000000"],"y":[1,1],"line":{"color":"#FFFFB3","width":33.3333333333333},"showlegend":false,"hoverinfo":["text","text"],"text":["<b>ENTRADA DE FINTECHS NO MERCADO (NUBANK, INTER)<\/b><br>from <b>2015-11-30 22:00:00<\/b> to <b>2020-11-30 21:00:00<\/b>","<b>ENTRADA DE FINTECHS NO MERCADO (NUBANK, INTER)<\/b><br>from <b>2015-11-30 22:00:00<\/b> to <b>2020-11-30 21:00:00<\/b>"],"marker":{"color":"rgba(127,127,127,1)","line":{"color":"rgba(127,127,127,1)"}},"error_y":{"color":"rgba(127,127,127,1)"},"error_x":{"color":"rgba(127,127,127,1)"},"xaxis":"x","yaxis":"y","frame":null},{"mode":"text","type":"scatter","x":["2018-06-01 09:00:00.000000"],"y":[1],"text":"ENTRADA DE FINTECHS NO MERCADO (NUBANK, INTER)","textfont":{"family":"Arial","size":7,"color":"rgba(0,0,0,1)"},"textposition":"center","showlegend":false,"hoverinfo":"none","marker":{"color":"rgba(188,189,34,1)","line":{"color":"rgba(188,189,34,1)"}},"error_y":{"color":"rgba(188,189,34,1)"},"error_x":{"color":"rgba(188,189,34,1)"},"line":{"color":"rgba(188,189,34,1)"},"xaxis":"x","yaxis":"y","frame":null},{"mode":"lines","type":"scatter","x":["2020-11-30 21:00:00.000000","2025-02-28 21:00:00.000000"],"y":[2,2],"line":{"color":"#CCEBC5","width":33.3333333333333},"showlegend":false,"hoverinfo":["text","text"],"text":["<b>CONSOLIDAÇÃO DAS FINTECHS NO MERCADO<\/b><br>from <b>2020-11-30 21:00:00<\/b> to <b>2025-02-28 21:00:00<\/b>","<b>CONSOLIDAÇÃO DAS FINTECHS NO MERCADO<\/b><br>from <b>2020-11-30 21:00:00<\/b> to <b>2025-02-28 21:00:00<\/b>"],"marker":{"color":"rgba(23,190,207,1)","line":{"color":"rgba(23,190,207,1)"}},"error_y":{"color":"rgba(23,190,207,1)"},"error_x":{"color":"rgba(23,190,207,1)"},"xaxis":"x","yaxis":"y","frame":null},{"mode":"text","type":"scatter","x":["2023-01-15 09:00:00.000000"],"y":[2],"text":"CONSOLIDAÇÃO DAS FINTECHS NO MERCADO","textfont":{"family":"Arial","size":7,"color":"rgba(0,0,0,1)"},"textposition":"center","showlegend":false,"hoverinfo":"none","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null},{"mode":"markers","type":"scatter","x":["1988-06-30 21:00:00.000000","1990-10-31 22:00:00.000000","1996-04-30 21:00:00.000000","1996-12-31 22:00:00.000000","1999-11-30 22:00:00.000000","2002-03-31 21:00:00.000000","2003-09-30 21:00:00.000000","2004-05-31 21:00:00.000000","2008-08-31 21:00:00.000000","2010-11-30 22:00:00.000000","2011-05-31 21:00:00.000000","2016-03-31 21:00:00.000000","2017-09-30 21:00:00.000000","2018-03-31 21:00:00.000000","2019-04-30 21:00:00.000000","2021-06-30 21:00:00.000000","2023-09-30 21:00:00.000000","2024-11-30 21:00:00.000000","1994-06-30 21:00:00.000000","1995-10-31 22:00:00.000000","1996-07-31 21:00:00.000000","1998-12-31 22:00:00.000000","2016-11-30 22:00:00.000000","1997-06-30 21:00:00.000000","2020-04-30 21:00:00.000000","2020-10-31 21:00:00.000000"],"y":[9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,7,7,7,7,7,5,2,2],"marker":{"color":["#8DD3C7","#FFFFB3","#B3DE69","#D9D9D9","#8DD3C7","#BEBADA","#FB8072","#80B1D3","#FCCDE5","#D9D9D9","#BC80BD","#BEBADA","#80B1D3","#FDB462","#B3DE69","#8DD3C7","#FFFFB3","#BEBADA","#BEBADA","#FDB462","#FCCDE5","#CCEBC5","#FB8072","#BC80BD","#D9D9D9","#BC80BD"],"size":10,"symbol":"circle","line":{"color":"black","width":1}},"showlegend":false,"hoverinfo":["text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text"],"text":["<b>BASILEIA I: 1988-06-30 21:00:00<\/b>","<b>LEI 8078/90 (REGULAMENTAÇÃO CADASTRO NEGATIVO): 1990-10-31 22:00:00<\/b>","<b>RESOLUÇÃO CMN 2099 (REGULAÇÃO SFN): 1996-04-30 21:00:00<\/b>","<b>LEI 9447/97 (PODER DE INTERVENÇÃO BACEN): 1996-12-31 22:00:00<\/b>","<b>RESOLUÇÃO 2682 CMN (PDD): 1999-11-30 22:00:00<\/b>","<b>IMPLEMENTAÇÃO SPB: 2002-03-31 21:00:00<\/b>","<b>LEI 10820/03 (CRÉDITO CONSIGNADO): 2003-09-30 21:00:00<\/b>","<b>BASILEIA II: 2004-05-31 21:00:00<\/b>","<b>LEI 11795/08 (LEI DOS CONSÓRCIOS): 2008-08-31 21:00:00<\/b>","<b>ACORDO DE BASILEIA III: 2010-11-30 22:00:00<\/b>","<b>LEI 12414/2011 (CADASTRO POSITIVO): 2011-05-31 21:00:00<\/b>","<b>RESOLUÇÃO 4480 CMN (ABERTURA DE CONTA DIGITAL): 2016-03-31 21:00:00<\/b>","<b>RESOLUÇÃO 4.553 CMN (SEGMENTAÇÃO IFS): 2017-09-30 21:00:00<\/b>","<b>RESOLUÇÕES 4656-58 CMN (REGULAÇÃO SEP E SED): 2018-03-31 21:00:00<\/b>","<b>ALTERAÇÃO LEI 12414/2011 (INCLUSÃO AUTOMATICA CADASTRO POSITIVO): 2019-04-30 21:00:00<\/b>","<b>LEI 14181/2021 (LEI DO SUPERENDIVIDAMENTO): 2021-06-30 21:00:00<\/b>","<b>LEI 14690 (DESENROLA + TETO ROTATIVO): 2023-09-30 21:00:00<\/b>","<b>RESOLUÇÃO 4966 CMN (TRANSIÇÃO IFRS9): 2024-11-30 21:00:00<\/b>","<b>IMPLEMENTAÇÃO DO REAL: 1994-06-30 21:00:00<\/b>","<b>PROER: 1995-10-31 22:00:00<\/b>","<b>PROES: 1996-07-31 21:00:00<\/b>","<b>TRIPÉ MACROECONÔMICO: 1998-12-31 22:00:00<\/b>","<b>TETO DE GASTOS: 2016-11-30 22:00:00<\/b>","<b>CRISE ASIÁTICA: 1997-06-30 21:00:00<\/b>","<b>LANÇAMENTO DO OPEN BANKING: 2020-04-30 21:00:00<\/b>","<b>LANÇAMENTO DO PIX: 2020-10-31 21:00:00<\/b>"],"error_y":{"color":"rgba(255,127,14,1)"},"error_x":{"color":"rgba(255,127,14,1)"},"line":{"color":"rgba(255,127,14,1)"},"xaxis":"x","yaxis":"y","frame":null},{"mode":"text","type":"scatter","x":["1988-06-30 21:00:00.000000","1990-10-31 22:00:00.000000","1996-04-30 21:00:00.000000","1996-12-31 22:00:00.000000","1999-11-30 22:00:00.000000","2002-03-31 21:00:00.000000","2003-09-30 21:00:00.000000","2004-05-31 21:00:00.000000","2008-08-31 21:00:00.000000","2010-11-30 22:00:00.000000","2011-05-31 21:00:00.000000","2016-03-31 21:00:00.000000","2017-09-30 21:00:00.000000","2018-03-31 21:00:00.000000","2019-04-30 21:00:00.000000","2021-06-30 21:00:00.000000","2023-09-30 21:00:00.000000","2024-11-30 21:00:00.000000","1994-06-30 21:00:00.000000","1995-10-31 22:00:00.000000","1996-07-31 21:00:00.000000","1998-12-31 22:00:00.000000","2016-11-30 22:00:00.000000","1997-06-30 21:00:00.000000","2020-04-30 21:00:00.000000","2020-10-31 21:00:00.000000"],"y":[9.5,8.5,9.5,8.5,9.5,8.5,9.5,8.5,9.5,8.5,9.5,8.5,9.5,8.5,9.5,8.5,9.5,8.5,7.5,6.5,7.5,6.5,7.5,4.5,2.5,1.5],"text":["BASILEIA I","LEI 8078/90 (REGULAMENTAÇÃO CADASTRO NEGATIVO)","RESOLUÇÃO CMN 2099 (REGULAÇÃO SFN)","LEI 9447/97 (PODER DE INTERVENÇÃO BACEN)","RESOLUÇÃO 2682 CMN (PDD)","IMPLEMENTAÇÃO SPB","LEI 10820/03 (CRÉDITO CONSIGNADO)","BASILEIA II","LEI 11795/08 (LEI DOS CONSÓRCIOS)","ACORDO DE BASILEIA III","LEI 12414/2011 (CADASTRO POSITIVO)","RESOLUÇÃO 4480 CMN (ABERTURA DE CONTA DIGITAL)","RESOLUÇÃO 4.553 CMN (SEGMENTAÇÃO IFS)","RESOLUÇÕES 4656-58 CMN (REGULAÇÃO SEP E SED)","ALTERAÇÃO LEI 12414/2011 (INCLUSÃO AUTOMATICA CADASTRO POSITIVO)","LEI 14181/2021 (LEI DO SUPERENDIVIDAMENTO)","LEI 14690 (DESENROLA + TETO ROTATIVO)","RESOLUÇÃO 4966 CMN (TRANSIÇÃO IFRS9)","IMPLEMENTAÇÃO DO REAL","PROER","PROES","TRIPÉ MACROECONÔMICO","TETO DE GASTOS","CRISE ASIÁTICA","LANÇAMENTO DO OPEN BANKING","LANÇAMENTO DO PIX"],"textfont":{"family":"Arial","size":7,"color":["rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)"]},"textposition":["center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center"],"showlegend":false,"hoverinfo":["none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none"],"marker":{"color":"rgba(44,160,44,1)","line":{"color":"rgba(44,160,44,1)"}},"error_y":{"color":"rgba(44,160,44,1)"},"error_x":{"color":"rgba(44,160,44,1)"},"line":{"color":"rgba(44,160,44,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+<template>Expand</template>
+<button aria-expanded="false" aria-label="Expand card" class="bslib-full-screen-enter badge rounded-pill"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;fill:currentColor;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg></button>
+</bslib-tooltip>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init="" data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-9339">
+<div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-0931e7d9081aaf3471dc" style="width:100%;height:400px;"></div>
+<script type="application/json" data-for="htmlwidget-0931e7d9081aaf3471dc">{"x":{"visdat":{"15dd437b6c224":["function () ","plotlyVisDat"]},"cur_data":"15dd437b6c224","attrs":{"15dd437b6c224":{"mode":"lines","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"},"15dd437b6c224.1":{"mode":"markers","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter","x":["1995-06-30 21:00:00.000000","1996-11-30 22:00:00.000000","1998-04-30 21:00:00.000000","1998-11-30 22:00:00.000000","2000-11-30 22:00:00.000000","2002-02-28 21:00:00.000000","2002-08-31 21:00:00.000000","2006-04-30 21:00:00.000000","2008-10-31 22:00:00.000000","2013-12-31 22:00:00.000000","2016-09-30 21:00:00.000000","1995-10-31 22:00:00.000000","1998-05-31 21:00:00.000000","2000-05-31 21:00:00.000000","2000-11-30 22:00:00.000000","2004-05-31 21:00:00.000000","1997-11-30 22:00:00.000000","1998-05-31 21:00:00.000000","2000-08-31 21:00:00.000000","2001-02-28 21:00:00.000000","2007-04-30 21:00:00.000000","1997-11-30 22:00:00.000000","1998-05-31 21:00:00.000000","1999-11-30 22:00:00.000000","2000-11-30 22:00:00.000000","2002-01-31 22:00:00.000000","2002-02-28 21:00:00.000000","2003-05-31 21:00:00.000000","2004-01-31 22:00:00.000000","2006-12-31 22:00:00.000000","2010-09-30 21:00:00.000000","2016-06-30 21:00:00.000000","1998-05-31 21:00:00.000000","2004-02-29 21:00:00.000000","1999-05-31 21:00:00.000000","2003-11-30 22:00:00.000000"],"y":[11,11,11,11,11,11,11,11,11,11,11,9,9,9,9,9,7,7,7,7,7,5,5,5,5,5,5,5,5,5,5,5,3,3,1,1],"marker":{"color":["#8DD3C7","#BEBADA","#FDB462","#CCEBC5","#B3DE69","#CCEBC5","#8DD3C7","#B3DE69","#BC80BD","#8DD3C7","#BEBADA","#FFFFB3","#B3DE69","#BEBADA","#80B1D3","#FDB462","#FB8072","#BC80BD","#FB8072","#FCCDE5","#D9D9D9","#80B1D3","#D9D9D9","#FFFFB3","#FDB462","#D9D9D9","#BC80BD","#FFFFB3","#FB8072","#FCCDE5","#CCEBC5","#FFFFB3","#FCCDE5","#80B1D3","#8DD3C7","#BEBADA"],"size":19.0909090909091,"symbol":"circle","line":{"color":"black","width":1}},"showlegend":false,"hoverinfo":"text","text":["<b>AQUISICAO BFB: 1995-06-30 21:00:00<\/b>","<b>AQUISICAO BANERJ: 1996-11-30 22:00:00<\/b>","<b>AQUISICAO BANCO DEL BUEN AYRE (ARGENTINA): 1998-04-30 21:00:00<\/b>","<b>AQUISICAO BEMGE: 1998-11-30 22:00:00<\/b>","<b>AQUISICAO BANESTADO: 2000-11-30 22:00:00<\/b>","<b>AQUISICAO BEG: 2002-02-28 21:00:00<\/b>","<b>AQUISICAO BBA-CREDITANSTALT: 2002-08-31 21:00:00<\/b>","<b>AQUISICAO BANK BOSTON: 2006-04-30 21:00:00<\/b>","<b>FUSAO UNIBANCO: 2008-10-31 22:00:00<\/b>","<b>AQUISICAO CONTROLE CORPBANCA: 2013-12-31 22:00:00<\/b>","<b>AQUISICAO VAREJO CITIBANK: 2016-09-30 21:00:00<\/b>","<b>AQUISICAO BANCO NACIONAL: 1995-10-31 22:00:00<\/b>","<b>AQUISICAO DIBENS: 1998-05-31 21:00:00<\/b>","<b>AQUISICAO CREDIBANCO: 2000-05-31 21:00:00<\/b>","<b>AQUISICAO BANCO BANDEIRANTES: 2000-11-30 22:00:00<\/b>","<b>AQUISICAO BNL: 2004-05-31 21:00:00<\/b>","<b>AQUISICAO BANCO GERAL DO COMERCIO E NOROESTE: 1997-11-30 22:00:00<\/b>","<b>AQUISICAO BONZANO, SIMONSEN: 1998-05-31 21:00:00<\/b>","<b>AQUISICAO BANCO MERIDIONAL: 2000-08-31 21:00:00<\/b>","<b>AQUISICAO BANESPA: 2001-02-28 21:00:00<\/b>","<b>AQUISICAO ABN AMRO BANCO REAL: 2007-04-30 21:00:00<\/b>","<b>AQUISICAO CREDIREAL: 1997-11-30 22:00:00<\/b>","<b>AQUISICAO BCN: 1998-05-31 21:00:00<\/b>","<b>AQUISICAO BANEB E PONTUAL: 1999-11-30 22:00:00<\/b>","<b>AQUISICAO BANCO BOAVISTA: 2000-11-30 22:00:00<\/b>","<b>AQUISICAO BANCO CIDADE: 2002-01-31 22:00:00<\/b>","<b>AQUISICAO MERCANTIL DE SP: 2002-02-28 21:00:00<\/b>","<b>AQUISICAO BBVA BRASIL: 2003-05-31 21:00:00<\/b>","<b>AQUISICAO BEM: 2004-01-31 22:00:00<\/b>","<b>AQUISICAO BMC: 2006-12-31 22:00:00<\/b>","<b>AQUISICAO BANCO IBI: 2010-09-30 21:00:00<\/b>","<b>AQUISICAO HSBC: 2016-06-30 21:00:00<\/b>","<b>AQUISICAO BAMERINDUS: 1998-05-31 21:00:00<\/b>","<b>AQUISICAO LLOYDS BANK: 2004-02-29 21:00:00<\/b>","<b>AQUISICAO BANCO REAL: 1999-05-31 21:00:00<\/b>","<b>AQUISICAO SUDAMERIS: 2003-11-30 22:00:00<\/b>"],"inherit":true},"15dd437b6c224.2":{"mode":"text","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter","x":["1995-06-30 21:00:00.000000","1996-11-30 22:00:00.000000","1998-04-30 21:00:00.000000","1998-11-30 22:00:00.000000","2000-11-30 22:00:00.000000","2002-02-28 21:00:00.000000","2002-08-31 21:00:00.000000","2006-04-30 21:00:00.000000","2008-10-31 22:00:00.000000","2013-12-31 22:00:00.000000","2016-09-30 21:00:00.000000","1995-10-31 22:00:00.000000","1998-05-31 21:00:00.000000","2000-05-31 21:00:00.000000","2000-11-30 22:00:00.000000","2004-05-31 21:00:00.000000","1997-11-30 22:00:00.000000","1998-05-31 21:00:00.000000","2000-08-31 21:00:00.000000","2001-02-28 21:00:00.000000","2007-04-30 21:00:00.000000","1997-11-30 22:00:00.000000","1998-05-31 21:00:00.000000","1999-11-30 22:00:00.000000","2000-11-30 22:00:00.000000","2002-01-31 22:00:00.000000","2002-02-28 21:00:00.000000","2003-05-31 21:00:00.000000","2004-01-31 22:00:00.000000","2006-12-31 22:00:00.000000","2010-09-30 21:00:00.000000","2016-06-30 21:00:00.000000","1998-05-31 21:00:00.000000","2004-02-29 21:00:00.000000","1999-05-31 21:00:00.000000","2003-11-30 22:00:00.000000"],"y":[11.5,10.5,11.5,10.5,11.5,10.5,11.5,10.5,11.5,10.5,11.5,8.5,9.5,8.5,9.5,8.5,7.5,6.5,7.5,6.5,7.5,4.5,5.5,4.5,5.5,4.5,5.5,4.5,5.5,4.5,5.5,4.5,3.5,2.5,1.5,0.5],"text":["AQUISICAO BFB","AQUISICAO BANERJ","AQUISICAO BANCO DEL BUEN AYRE (ARGENTINA)","AQUISICAO BEMGE","AQUISICAO BANESTADO","AQUISICAO BEG","AQUISICAO BBA-CREDITANSTALT","AQUISICAO BANK BOSTON","FUSAO UNIBANCO","AQUISICAO CONTROLE CORPBANCA","AQUISICAO VAREJO CITIBANK","AQUISICAO BANCO NACIONAL","AQUISICAO DIBENS","AQUISICAO CREDIBANCO","AQUISICAO BANCO BANDEIRANTES","AQUISICAO BNL","AQUISICAO BANCO GERAL DO COMERCIO E NOROESTE","AQUISICAO BONZANO, SIMONSEN","AQUISICAO BANCO MERIDIONAL","AQUISICAO BANESPA","AQUISICAO ABN AMRO BANCO REAL","AQUISICAO CREDIREAL","AQUISICAO BCN","AQUISICAO BANEB E PONTUAL","AQUISICAO BANCO BOAVISTA","AQUISICAO BANCO CIDADE","AQUISICAO MERCANTIL DE SP","AQUISICAO BBVA BRASIL","AQUISICAO BEM","AQUISICAO BMC","AQUISICAO BANCO IBI","AQUISICAO HSBC","AQUISICAO BAMERINDUS","AQUISICAO LLOYDS BANK","AQUISICAO BANCO REAL","AQUISICAO SUDAMERIS"],"textfont":{"family":"Arial","size":14,"color":["rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)"]},"textposition":"center","showlegend":false,"hoverinfo":"none","inherit":true}},"layout":{"margin":{"b":10,"l":10,"t":10,"r":10,"pad":10},"hovermode":"closest","plot_bgcolor":"#FCFCFC","shapes":[{"type":"line","x0":0,"x1":1,"xref":"paper","y0":2,"y1":2,"line":{"color":"grey65","width":0.5}},{"type":"line","x0":0,"x1":1,"xref":"paper","y0":4,"y1":4,"line":{"color":"grey65","width":0.5}},{"type":"line","x0":0,"x1":1,"xref":"paper","y0":6,"y1":6,"line":{"color":"grey65","width":0.5}},{"type":"line","x0":0,"x1":1,"xref":"paper","y0":8,"y1":8,"line":{"color":"grey65","width":0.5}},{"type":"line","x0":0,"x1":1,"xref":"paper","y0":10,"y1":10,"line":{"color":"grey65","width":0.5}}],"xaxis":{"domain":[0,1],"automargin":true,"linewidth":1,"mirror":true,"showgrid":true,"gridcolor":"grey90","title":"","dtick":"M12","tickformat":"%Y"},"yaxis":{"domain":[0,1],"automargin":true,"linewidth":1,"mirror":true,"range":[0,12],"showgrid":false,"title":"","tickmode":"array","tickvals":[11,9,7,5,3,1],"ticktext":["ITAU","UNIBANCO","SANTANDER","BRADESCO","HSBC","ABN AMRO"],"tickfont":{"size":9}},"showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"mode":"lines","type":"scatter","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null},{"mode":"markers","type":"scatter","x":["1995-06-30 21:00:00.000000","1996-11-30 22:00:00.000000","1998-04-30 21:00:00.000000","1998-11-30 22:00:00.000000","2000-11-30 22:00:00.000000","2002-02-28 21:00:00.000000","2002-08-31 21:00:00.000000","2006-04-30 21:00:00.000000","2008-10-31 22:00:00.000000","2013-12-31 22:00:00.000000","2016-09-30 21:00:00.000000","1995-10-31 22:00:00.000000","1998-05-31 21:00:00.000000","2000-05-31 21:00:00.000000","2000-11-30 22:00:00.000000","2004-05-31 21:00:00.000000","1997-11-30 22:00:00.000000","1998-05-31 21:00:00.000000","2000-08-31 21:00:00.000000","2001-02-28 21:00:00.000000","2007-04-30 21:00:00.000000","1997-11-30 22:00:00.000000","1998-05-31 21:00:00.000000","1999-11-30 22:00:00.000000","2000-11-30 22:00:00.000000","2002-01-31 22:00:00.000000","2002-02-28 21:00:00.000000","2003-05-31 21:00:00.000000","2004-01-31 22:00:00.000000","2006-12-31 22:00:00.000000","2010-09-30 21:00:00.000000","2016-06-30 21:00:00.000000","1998-05-31 21:00:00.000000","2004-02-29 21:00:00.000000","1999-05-31 21:00:00.000000","2003-11-30 22:00:00.000000"],"y":[11,11,11,11,11,11,11,11,11,11,11,9,9,9,9,9,7,7,7,7,7,5,5,5,5,5,5,5,5,5,5,5,3,3,1,1],"marker":{"color":["#8DD3C7","#BEBADA","#FDB462","#CCEBC5","#B3DE69","#CCEBC5","#8DD3C7","#B3DE69","#BC80BD","#8DD3C7","#BEBADA","#FFFFB3","#B3DE69","#BEBADA","#80B1D3","#FDB462","#FB8072","#BC80BD","#FB8072","#FCCDE5","#D9D9D9","#80B1D3","#D9D9D9","#FFFFB3","#FDB462","#D9D9D9","#BC80BD","#FFFFB3","#FB8072","#FCCDE5","#CCEBC5","#FFFFB3","#FCCDE5","#80B1D3","#8DD3C7","#BEBADA"],"size":10,"symbol":"circle","line":{"color":"black","width":1}},"showlegend":false,"hoverinfo":["text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text"],"text":["<b>AQUISICAO BFB: 1995-06-30 21:00:00<\/b>","<b>AQUISICAO BANERJ: 1996-11-30 22:00:00<\/b>","<b>AQUISICAO BANCO DEL BUEN AYRE (ARGENTINA): 1998-04-30 21:00:00<\/b>","<b>AQUISICAO BEMGE: 1998-11-30 22:00:00<\/b>","<b>AQUISICAO BANESTADO: 2000-11-30 22:00:00<\/b>","<b>AQUISICAO BEG: 2002-02-28 21:00:00<\/b>","<b>AQUISICAO BBA-CREDITANSTALT: 2002-08-31 21:00:00<\/b>","<b>AQUISICAO BANK BOSTON: 2006-04-30 21:00:00<\/b>","<b>FUSAO UNIBANCO: 2008-10-31 22:00:00<\/b>","<b>AQUISICAO CONTROLE CORPBANCA: 2013-12-31 22:00:00<\/b>","<b>AQUISICAO VAREJO CITIBANK: 2016-09-30 21:00:00<\/b>","<b>AQUISICAO BANCO NACIONAL: 1995-10-31 22:00:00<\/b>","<b>AQUISICAO DIBENS: 1998-05-31 21:00:00<\/b>","<b>AQUISICAO CREDIBANCO: 2000-05-31 21:00:00<\/b>","<b>AQUISICAO BANCO BANDEIRANTES: 2000-11-30 22:00:00<\/b>","<b>AQUISICAO BNL: 2004-05-31 21:00:00<\/b>","<b>AQUISICAO BANCO GERAL DO COMERCIO E NOROESTE: 1997-11-30 22:00:00<\/b>","<b>AQUISICAO BONZANO, SIMONSEN: 1998-05-31 21:00:00<\/b>","<b>AQUISICAO BANCO MERIDIONAL: 2000-08-31 21:00:00<\/b>","<b>AQUISICAO BANESPA: 2001-02-28 21:00:00<\/b>","<b>AQUISICAO ABN AMRO BANCO REAL: 2007-04-30 21:00:00<\/b>","<b>AQUISICAO CREDIREAL: 1997-11-30 22:00:00<\/b>","<b>AQUISICAO BCN: 1998-05-31 21:00:00<\/b>","<b>AQUISICAO BANEB E PONTUAL: 1999-11-30 22:00:00<\/b>","<b>AQUISICAO BANCO BOAVISTA: 2000-11-30 22:00:00<\/b>","<b>AQUISICAO BANCO CIDADE: 2002-01-31 22:00:00<\/b>","<b>AQUISICAO MERCANTIL DE SP: 2002-02-28 21:00:00<\/b>","<b>AQUISICAO BBVA BRASIL: 2003-05-31 21:00:00<\/b>","<b>AQUISICAO BEM: 2004-01-31 22:00:00<\/b>","<b>AQUISICAO BMC: 2006-12-31 22:00:00<\/b>","<b>AQUISICAO BANCO IBI: 2010-09-30 21:00:00<\/b>","<b>AQUISICAO HSBC: 2016-06-30 21:00:00<\/b>","<b>AQUISICAO BAMERINDUS: 1998-05-31 21:00:00<\/b>","<b>AQUISICAO LLOYDS BANK: 2004-02-29 21:00:00<\/b>","<b>AQUISICAO BANCO REAL: 1999-05-31 21:00:00<\/b>","<b>AQUISICAO SUDAMERIS: 2003-11-30 22:00:00<\/b>"],"error_y":{"color":"rgba(255,127,14,1)"},"error_x":{"color":"rgba(255,127,14,1)"},"line":{"color":"rgba(255,127,14,1)"},"xaxis":"x","yaxis":"y","frame":null},{"mode":"text","type":"scatter","x":["1995-06-30 21:00:00.000000","1996-11-30 22:00:00.000000","1998-04-30 21:00:00.000000","1998-11-30 22:00:00.000000","2000-11-30 22:00:00.000000","2002-02-28 21:00:00.000000","2002-08-31 21:00:00.000000","2006-04-30 21:00:00.000000","2008-10-31 22:00:00.000000","2013-12-31 22:00:00.000000","2016-09-30 21:00:00.000000","1995-10-31 22:00:00.000000","1998-05-31 21:00:00.000000","2000-05-31 21:00:00.000000","2000-11-30 22:00:00.000000","2004-05-31 21:00:00.000000","1997-11-30 22:00:00.000000","1998-05-31 21:00:00.000000","2000-08-31 21:00:00.000000","2001-02-28 21:00:00.000000","2007-04-30 21:00:00.000000","1997-11-30 22:00:00.000000","1998-05-31 21:00:00.000000","1999-11-30 22:00:00.000000","2000-11-30 22:00:00.000000","2002-01-31 22:00:00.000000","2002-02-28 21:00:00.000000","2003-05-31 21:00:00.000000","2004-01-31 22:00:00.000000","2006-12-31 22:00:00.000000","2010-09-30 21:00:00.000000","2016-06-30 21:00:00.000000","1998-05-31 21:00:00.000000","2004-02-29 21:00:00.000000","1999-05-31 21:00:00.000000","2003-11-30 22:00:00.000000"],"y":[11.5,10.5,11.5,10.5,11.5,10.5,11.5,10.5,11.5,10.5,11.5,8.5,9.5,8.5,9.5,8.5,7.5,6.5,7.5,6.5,7.5,4.5,5.5,4.5,5.5,4.5,5.5,4.5,5.5,4.5,5.5,4.5,3.5,2.5,1.5,0.5],"text":["AQUISICAO BFB","AQUISICAO BANERJ","AQUISICAO BANCO DEL BUEN AYRE (ARGENTINA)","AQUISICAO BEMGE","AQUISICAO BANESTADO","AQUISICAO BEG","AQUISICAO BBA-CREDITANSTALT","AQUISICAO BANK BOSTON","FUSAO UNIBANCO","AQUISICAO CONTROLE CORPBANCA","AQUISICAO VAREJO CITIBANK","AQUISICAO BANCO NACIONAL","AQUISICAO DIBENS","AQUISICAO CREDIBANCO","AQUISICAO BANCO BANDEIRANTES","AQUISICAO BNL","AQUISICAO BANCO GERAL DO COMERCIO E NOROESTE","AQUISICAO BONZANO, SIMONSEN","AQUISICAO BANCO MERIDIONAL","AQUISICAO BANESPA","AQUISICAO ABN AMRO BANCO REAL","AQUISICAO CREDIREAL","AQUISICAO BCN","AQUISICAO BANEB E PONTUAL","AQUISICAO BANCO BOAVISTA","AQUISICAO BANCO CIDADE","AQUISICAO MERCANTIL DE SP","AQUISICAO BBVA BRASIL","AQUISICAO BEM","AQUISICAO BMC","AQUISICAO BANCO IBI","AQUISICAO HSBC","AQUISICAO BAMERINDUS","AQUISICAO LLOYDS BANK","AQUISICAO BANCO REAL","AQUISICAO SUDAMERIS"],"textfont":{"family":"Arial","size":7,"color":["rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)","rgba(0,0,0,1)"]},"textposition":["center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center","center"],"showlegend":false,"hoverinfo":["none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none"],"marker":{"color":"rgba(44,160,44,1)","line":{"color":"rgba(44,160,44,1)"}},"error_y":{"color":"rgba(44,160,44,1)"},"error_x":{"color":"rgba(44,160,44,1)"},"line":{"color":"rgba(44,160,44,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+<template>Expand</template>
+<button aria-expanded="false" aria-label="Expand card" class="bslib-full-screen-enter badge rounded-pill"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;fill:currentColor;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg></button>
+</bslib-tooltip>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script>
+</div>
+</div>
+</div>
+<p>Os dois marcos históricos mais relevantes no fim dos anos 80 e início dos anos 90 são a implementação do Plano Real e o acordo Basileia I.</p>
+<p>Os Acordos de Basileia passaram a requerer critérios mínimos de capital a fim de trazer mais segurança e liquidez no sistema financeiro - em conjunto com a alteração do contexto macroeconômico brasileiro, cerca de 6 anos depois, iniciou-se um grande movimento de consolidação do sistema bancário brasileiro.</p>
+<p>O Plano Real estabilizou a inflação brasileira, o que desestabilizou de forma significativa o sistema bancário - boa parte das receitas bancárias vinham do float inflacionários: os recursos livres em transferência eram aplicados em operações de curtíssimo prazo, e quando o dinheiro era pago ao destinatário, o valor pago pelo banco era inferior aos ganhos das aplicações, dado que este havia sido corroído pela inflação.</p>
+<p>Com a perda do ganho de arbitragen inflacionária, muitos bancos públicos e privados perderam a capacidade de operar no mercado devido a problemas de liquidez., motivando a criação do PROES (Programa de Incentivo à Redução do Setor Público Estadual na Atividade Bancária) e PROER (Programa de Estímulo à Reestruturação e ao Fortalecimento do Sistema Financeiro Nacional).</p>
+<p>Esses dois programas incentivaram uma série de aquisições de bancos públicos e privados, de forma que entre 1995 e 2004 ocorreram cerca de 28 aquisições ou fusões bancárias, 24 das quais foram conduzidas pelos bancos privados que hoje são os 3 maiores bancos do Brasil em ativos totais.</p>
+<p>Essa mudança se reflete em uma queda agressiva do spread de recursos livres<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> a partir do início dos anos 2000 (linha destacada):</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="caderno_spread_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Após os anos 2000, o valor médio mensal do spread de créditos com recursos livres cai de 82% para 36%, um massivo sucesso da implementação do plano de estabilização monetária e dos programas de reestruturação bancária.</p>
+<p>No entanto, dos anos 2000 para cá, o spread se manteve consistentemente acima de 20% ou mais, com destaque para o crédito de consumo para as famílias, que se manteve consideravelmente mais alto do que o crédito para as empresas. Desde então, diversas medidas e tentativas de reduzir o spread foram realizadas, com relativo insucesso.</p>
+<p>Com esse ponto de partida, será feita uma tentativa de caracterizar as diversas medidas adotadas e eventos que possam ter impactado as variações do spread dos anos 2000 em diante, bem como caracterizar um pouco melhor o cenário do mercado de crédito, com informações como a SELIC, inflação e concessões de crédito/spread por tipo de instituição e produto.</p>
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>É importantíssimo ressasltar que houve uma mudança metodológica relevante no cálculo de spread de 2011 em diante, de forma que o spread bancária de 2011 para trás não é comparável com as estatísticas atuais. A principal mudança foi a inclusão de crédito com recursos direcionados e de produtos relevantes, como o cartão de crédito.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

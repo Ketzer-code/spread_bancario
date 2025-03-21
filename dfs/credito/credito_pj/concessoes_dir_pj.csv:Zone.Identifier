@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=https://www3.bcb.gov.br/sgspub/consultarvalores/consultarValoresSeries.do?method=consultarValores
+HostUrl=https://www3.bcb.gov.br/sgspub/consultarvalores/consultarValoresSeries.do?method=downLoad
